@@ -8,8 +8,7 @@ class CSVFile:
         # Setto il nome del file
         if not isinstance(name,str):
             raise Exception ("Nome file non stringa")
-        self.name = name
-        
+        self.name = name     
     
     #funzione che legge i valori numerici dal file
     def get_data(self, start=None, end=None):
