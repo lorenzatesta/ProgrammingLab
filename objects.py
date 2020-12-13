@@ -8,8 +8,7 @@ class CSVFile:
         # Setto il nome del file
         if not isinstance(name,str):
             raise Exception ("Nome file non stringa")
-        self.name = name
-        
+        self.name = name     
     
     #funzione che legge i valori numerici dal file
     def get_data(self, start=None, end=None):
@@ -63,10 +62,48 @@ class CSVFile:
             raise Exception("Stai attento...ricontrolla gli estremi dell'intervallo")
         
         return values[start:end+1]
-    
+
+#======================
+# Classe per Modello
+#======================
+
+class Model(object):
+
+	def fit (self, data):
+		pass
+
+	def predict(self):
+		pass
+
+
+class IncrementModel(Model):
+
+	def fit (self, data):
+		sum = 0
+		for i in range(1, len(data)):
+			sum += (data[i] - data[i-1])
+		self.global_avg_increment = sum / (len(data) - 1)
+		
+
+	def predict(self, prev_months):
+		sum = 0
+		for i in range(1, len(prev_months)):
+			sum += (prev_months[i] - prev_months[i-1])
+		media = sum / (len(prev_months) - 1)
+		return media + (prev_months[-1] + self.global_avg_increment / 2)
+
 #======================
 # Corpo del programma
 #======================
 
 mio_file = CSVFile("shampoo_sales.csv")
 print(mio_file.get_data(1,10))
+
+prev_months_1 = mio_file.get_data(0, 36)
+prev_months_2 = mio_file.get_data(33, 36)
+
+obj_incr = IncrementModel()
+
+obj_incr.fit(prev_months_1)
+predizione = obj_incr.predict(prev_months_2)
+print("predizione prossimo mese:", predizione)
